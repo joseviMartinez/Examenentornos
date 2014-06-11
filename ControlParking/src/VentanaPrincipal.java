@@ -17,14 +17,14 @@ public class VentanaPrincipal extends JFrame {
 
 	//Componentes visuales
 	private JPanel contentPane;
-	private JTextField matriculaTxt;
-	private JTextField horaEntradaTxt;
-	private JTextField horaSalidaTxt;
-	private JTextField precioPagarTxt;
-
-	/**
-	 * Launch the application.
-	 */
+	private JTextField Matricula;
+	private JTextField HoraEntrada;
+	private JTextField HoraSalida;
+	private JTextField PrecioPagar;
+	private JOptionPane error;
+	private Coche coxe;
+	private JComboBox<Coche> listadoCoche;
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -49,10 +49,14 @@ public class VentanaPrincipal extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		JComboBox listadoCoches = new JComboBox();
-		listadoCoches.setBounds(10, 29, 414, 20);
-		contentPane.add(listadoCoches);
+		listadoCoche = new JComboBox<Coche>();
+		listadoCoche.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		//JComboBox listadoCoches = new JComboBox();
+		listadoCoche.setBounds(10, 29, 414, 20);
+		contentPane.add(listadoCoche);
 		
 		JLabel lblListadoDeCoches = new JLabel("Listado de coches");
 		lblListadoDeCoches.setBounds(10, 4, 151, 14);
@@ -74,31 +78,64 @@ public class VentanaPrincipal extends JFrame {
 		lblPrecioAPagar.setBounds(10, 172, 101, 14);
 		contentPane.add(lblPrecioAPagar);
 		
-		matriculaTxt = new JTextField();
-		matriculaTxt.setBounds(119, 60, 86, 20);
-		contentPane.add(matriculaTxt);
-		matriculaTxt.setColumns(10);
+		Matricula = new JTextField();
+		Matricula.setBounds(119, 60, 86, 20);
+		contentPane.add(Matricula);
+		Matricula.setColumns(10);
 		
-		horaEntradaTxt = new JTextField();
-		horaEntradaTxt.setColumns(10);
-		horaEntradaTxt.setBounds(119, 97, 86, 20);
-		contentPane.add(horaEntradaTxt);
+		HoraEntrada = new JTextField();
+		HoraEntrada.setColumns(10);
+		HoraEntrada.setBounds(119, 97, 86, 20);
+		contentPane.add(HoraEntrada);
 		
-		horaSalidaTxt = new JTextField();
-		horaSalidaTxt.setColumns(10);
-		horaSalidaTxt.setBounds(119, 133, 86, 20);
-		contentPane.add(horaSalidaTxt);
+		HoraSalida = new JTextField();
+		HoraSalida.setColumns(10);
+		HoraSalida.setBounds(119, 133, 86, 20);
+		contentPane.add(HoraSalida);
 		
-		precioPagarTxt = new JTextField();
-		precioPagarTxt.setEditable(false);
-		precioPagarTxt.setColumns(10);
-		precioPagarTxt.setBounds(119, 169, 86, 20);
-		contentPane.add(precioPagarTxt);
+		PrecioPagar = new JTextField();
+		PrecioPagar.setEditable(false);
+		PrecioPagar.setColumns(10);
+		PrecioPagar.setBounds(119, 169, 86, 20);
+		contentPane.add(PrecioPagar);
 		
-		JButton btnNewButton = new JButton("A PAGAR");
-		btnNewButton.setBounds(230, 58, 194, 128);
-		contentPane.add(btnNewButton);
+		JButton Apagar = new JButton("A PAGAR");
+		Apagar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (Matricula.getText().equals(""))
+				error.showMessageDialog(null, "campo vacio");	
+				else if (Integer.parseInt(HoraEntrada.getText())<0)
+					error.showMessageDialog(null,"campo vacio");
+				 if (Integer.parseInt(HoraEntrada.getText())>23)
+					 error.showMessageDialog(null,"campo vacio");
+				 else if(Integer.parseInt(HoraSalida.getText())<0) 
+					error.showMessageDialog(null,"campo vacio");
+				 if (Integer.parseInt(HoraSalida.getText())>23)
+					 error.showMessageDialog(null,"campo vacio");
+				 if (Integer.parseInt(HoraEntrada.getText())>Integer.parseInt(HoraSalida.getText()))
+					 error.showMessageDialog(null,"campo vacio");
+				else{
+					Coche coxe=new Coche();
+					coxe.guardarmatricula(Matricula.getText());
+					coxe.guardarhoraentrada(Integer.parseInt(HoraEntrada.getText()));
+					coxe.guardarhorasalida(Integer.parseInt(HoraSalida.getText()));
+					listadoCoche.addItem(coxe);
+				}
+				
+			}
+		});
+		Apagar.setBounds(230, 58, 194, 128);
+		contentPane.add(Apagar);
 		
-		
+		listadoCoche.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				coxe=listadoCoche.getItemAt(listadoCoche.getSelectedIndex());
+				Matricula.setText(String.valueOf(coxe.cogermatricula()));
+				HoraEntrada.setText(String.valueOf(coxe.cogerhoraentrada()));
+				HoraSalida.setText(String.valueOf(coxe.cogerhorasalida()));
+				PrecioPagar.setText(String.valueOf(coxe.cogerprecio()));
+				
+			}
+		});
 	}
 }
